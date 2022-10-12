@@ -1,20 +1,50 @@
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
+import { styles } from "./components/css";
+import AddTasks from "./components/addTasks";
+import { useState } from "react";
+import { View, Text, Button } from "react-native";
 
 export default function App() {
+  const [tasks, setTasks] = useState([]);
+
+  let check_item = (item) => {
+    let items = [];
+    for (let i of tasks) {
+      if (i != item) {
+        items.push(i);
+      }
+    }
+    setTasks(items);
+  };
+
   return (
     <View style={styles.container}>
-      <Text>Open up App.js to start working on your app!</Text>
-      <StatusBar style="auto" />
+      <AddTasks
+        addTask={(data) => {
+          setTasks([...tasks, data]);
+        }}
+      />
+      {tasks.map((item, index) => {
+        return (
+          <Text style={styles.txtStyle} key={index}>
+            idx:{index} task : {item}
+            <Button
+              title="remove"
+              onPress={(item) => {
+                check_item(item);
+                // setTasks(tasks.filter((data)=>{
+                //   data.id!==item.id;
+                // }))
+              }}
+            />
+          </Text>
+        );
+      })}
+      <Button
+        title="Clear"
+        onPress={() => {
+          setTasks([]);
+        }}
+      />
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
